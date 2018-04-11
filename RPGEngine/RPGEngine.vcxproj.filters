@@ -18,6 +18,16 @@
       <Filter>Scene</Filter>
     </ClInclude>
     <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="GameMap.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="GameTile.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="TileTemplate.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderable.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Scene">
@@ -25,6 +35,9 @@
     </Filter>
     <Filter Include="Resource">
       <UniqueIdentifier>{a6f6abaa-0875-40ed-b9d3-d64327d79acc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{f3264f8d-3c86-499a-899e-8db291b653dc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -35,6 +48,15 @@
       <Filter>Resource</Filter>
     </ClCompile>
     <ClCompile Include="Engine.cpp" />
+    <ClCompile Include="GameMap.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="GameTile.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="TileTemplate.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="FullSceneLogo.png">

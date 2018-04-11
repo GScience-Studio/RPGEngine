@@ -10,7 +10,7 @@
 _declspec (dllexport) int run(int argc, char* argv[], const std::function<int()>& initFunc);
 
 //!×¢²átile
-_declspec (dllexport) void registerTile(const char* fileName);
+_declspec (dllexport) void registerTile(const char* tileName, const char* fileName);
 
 //!×¢²ámap
 _declspec (dllexport) void registerMap(const char* fileName);

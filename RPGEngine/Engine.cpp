@@ -1,14 +1,19 @@
 #include <SDL2/SDL.h>
+#include <fstream>
+#include <sstream>
 #include "InitScene.h"
 #include "../Engine.h"
 #include "SceneManager.h"
 #include "MainMenuScene.h"
+#include "TileTemplate.h"
+
+SDL_Renderer* renderer;
 
 _declspec (dllexport) int run(int argc, char* argv[], const std::function<int()>& initFunc)
 {
 	//创建窗口
 	const auto window = SDL_CreateWindow(u8"RPG Engine example", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1024, 704, SDL_WINDOW_OPENGL);
-	const auto renderer = SDL_CreateRenderer(window, -1, 0);
+	renderer = SDL_CreateRenderer(window, -1, 0);
 	
 	//初始化场景
 	auto& sceneManager = SceneManager::getInstance();
@@ -51,9 +56,15 @@ _declspec (dllexport) int run(int argc, char* argv[], const std::function<int()>
 	return 0;
 }
 
-_declspec (dllexport) void registerTile(const char* fileName)
+_declspec (dllexport) void registerTile(const char* tileName, const char* fileName)
 {
-	
+	//读取完整文件
+	std::ifstream file(fileName);
+	std::stringstream fileStrStream;
+	fileStrStream << file.rdbuf();
+
+	//注册
+	TileTemplate::registerTileTemplate(renderer, tileName, fileStrStream.str());
 }
 
 _declspec (dllexport) void registerMap(const char* fileName)

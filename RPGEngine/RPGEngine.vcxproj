@@ -158,15 +158,22 @@
     <ClInclude Include="..\Engine.h" />
     <ClInclude Include="InitScene.h" />
     <ClInclude Include="MainMenuScene.h" />
+    <ClInclude Include="GameMap.h" />
     <ClInclude Include="ReadFromResource.h" />
+    <ClInclude Include="Renderable.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SceneBase.h" />
     <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="GameTile.h" />
+    <ClInclude Include="TileTemplate.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp" />
+    <ClCompile Include="GameMap.cpp" />
+    <ClCompile Include="GameTile.cpp" />
     <ClCompile Include="InitScene.cpp" />
     <ClCompile Include="Resource.cpp" />
+    <ClCompile Include="TileTemplate.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="FullSceneLogo.png" />
