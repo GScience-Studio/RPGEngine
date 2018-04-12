@@ -7,21 +7,16 @@ class GameMap;
 
 class GameTile :public Renderable
 {
-	friend class GameMap;
-
 	//!当前显示的tile id
 	int mShownTileImageId = 0;
-
-	//!当前tile的位置
-	int mX = 0, mY = 0;
 
 	//!tile模板
 	const TileTemplate& mTileTemplate;
 
+public:
 	//!从tile模板创建tile
 	explicit GameTile(const TileTemplate& tileTemplate) :mTileTemplate(tileTemplate) {}
 
-public:
-	void draw(SDL_Renderer* renderer) override;
+	void draw(SDL_Renderer* renderer, int xOffset, int yOffset) override;
 	void refresh(double passedTick) override;
 };

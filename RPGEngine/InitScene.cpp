@@ -4,8 +4,9 @@
 #include "InitScene.h"
 #include "SceneManager.h"
 #include "MainMenuScene.h"
+#include "GameScene.h"
 
-void InitScene::draw(SDL_Renderer* renderer)
+void InitScene::draw(SDL_Renderer* renderer, int xOffset, int yOffset)
 {
 	SDL_RenderCopy(renderer, mFullSceneLogo, nullptr, nullptr);
 }
@@ -13,7 +14,7 @@ void InitScene::draw(SDL_Renderer* renderer)
 void InitScene::refresh(double passedTick)
 {
 	if (mInitFunctionGroup.empty())
-		SceneManager::getInstance().switchScene<MainMenuScene>();
+		SceneManager::getInstance().switchScene<GameScene>();
 	else
 	{
 		const auto initStep = mInitFunctionGroup.begin();

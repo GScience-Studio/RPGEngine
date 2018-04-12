@@ -46,7 +46,7 @@ public:
 	void draw(SDL_Renderer* renderer) const
 	{
 		//äÖÈ¾
-		mShownScene->draw(renderer);
+		mShownScene->draw(renderer, 0, 0);
 	}
 
 	void refresh(const double passedTick)

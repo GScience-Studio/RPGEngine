@@ -24,6 +24,6 @@ public:
 		mInitFunctionGroup.emplace_back(std::make_pair(func, stepName));
 	}
 
-	void draw(SDL_Renderer* renderer) override;
+	void draw(SDL_Renderer* renderer, int xOffset, int yOffset) override;
 	void refresh(double passedTick) override;
 };

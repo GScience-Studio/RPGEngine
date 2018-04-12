@@ -28,6 +28,9 @@
       <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="Renderable.h" />
+    <ClInclude Include="GameScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Scene">
@@ -56,6 +59,9 @@
     </ClCompile>
     <ClCompile Include="TileTemplate.cpp">
       <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="GameScene.cpp">
+      <Filter>Scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

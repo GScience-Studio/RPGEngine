@@ -22,7 +22,7 @@ TileTemplate::TileTemplate(SDL_Renderer* renderer, const std::string& json)
 			tileImageList[i] = IMG_LoadTexture(renderer, root["image_list"][i]["image"].asCString());
 		}
 	}
-	catch (std::exception e)
+	catch (std::exception&)
 	{
 		return;
 	}
