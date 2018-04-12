@@ -156,6 +156,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Engine.h" />
+    <ClInclude Include="GameAction.h" />
+    <ClInclude Include="GameMapEventProcessorBase.h" />
+    <ClInclude Include="GameActor.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="InitScene.h" />
     <ClInclude Include="MainMenuScene.h" />
@@ -170,6 +173,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp" />
+    <ClCompile Include="GameAction.cpp" />
     <ClCompile Include="GameMap.cpp" />
     <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="GameTile.cpp" />

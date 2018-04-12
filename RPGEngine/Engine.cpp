@@ -8,6 +8,7 @@
 #include "TileTemplate.h"
 #include "GameMap.h"
 #include "GameScene.h"
+#include "GameActor.h"
 
 SDL_Renderer* renderer;
 
@@ -34,6 +35,8 @@ _declspec (dllexport) int run(int argc, char* argv[], const std::function<int()>
 	
 	auto shouldCloseWindow = false;
 
+	auto lastTick = SDL_GetTicks() / 1000.0;
+
 	//进入主循环
 	while (!shouldCloseWindow)
 	{
@@ -52,7 +55,9 @@ _declspec (dllexport) int run(int argc, char* argv[], const std::function<int()>
 		}
 
 		//刷新场景
-		sceneManager.refresh(0);
+		const auto nowTick = SDL_GetTicks() / 1000.0;
+		sceneManager.refresh(nowTick - lastTick);
+		lastTick = nowTick;
 	}
 	
 	SDL_Quit();
@@ -70,7 +75,7 @@ _declspec (dllexport) void registerTile(const char* tileName, const char* fileNa
 	TileTemplate::registerTileTemplate(renderer, tileName, fileStrStream.str());
 }
 
-_declspec (dllexport) void registerMap(const char* mapName, const char* fileName)
+_declspec (dllexport) void registerMap(const char* mapName, const char* fileName, GameMapEventProcessorBase* eventProcessor)
 {
 	//读取完整文件
 	std::ifstream file(fileName);
@@ -78,10 +83,12 @@ _declspec (dllexport) void registerMap(const char* mapName, const char* fileName
 	fileStrStream << file.rdbuf();
 
 	//注册
-	GameMap::registerGameMap(renderer, mapName, fileStrStream.str());
+	GameMap::registerGameMap(renderer, mapName, fileStrStream.str(), eventProcessor);
 }
 
-_declspec (dllexport) void setSpawn(const char* mapName, int x, int y)
+_declspec (dllexport) void setSpawn(const char* mapName, const int x, const int y)
 {
-	SceneManager::getInstance().getSceneObj<GameScene>()->setCamera(&GameMap::getGameMap(mapName), x, y);
+	GamePlayer::getGlobalPlayer().inMap = &GameMap::getGameMap(mapName);
+	GamePlayer::getGlobalPlayer().x = x;
+	GamePlayer::getGlobalPlayer().y = y;
 }

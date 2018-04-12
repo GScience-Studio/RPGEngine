@@ -2,7 +2,7 @@
 #include "../Engine.h"
 #include <json/json.h>
 
-GameMap::GameMap(SDL_Renderer* renderer, const char* mapName, std::string json)
+GameMap::GameMap(SDL_Renderer* renderer, const char* mapName, std::string json, GameMapEventProcessorBase* eventProcessor) :mEventProcessor(eventProcessor)
 {
 	try
 	{

@@ -2,12 +2,19 @@
 
 #include "SceneBase.h"
 #include "GameMap.h"
+#include "GameAction.h"
+#include "GameActor.h"
+#include <queue>
 
 class GameScene :public SceneBase
 {
-	GameMap* mCameraIn = nullptr;
-	int mCameraX = 0;
-	int mCameraY = 0;
+	Camera mCamera;
+
+	//!是否把相机绑定到玩家身上
+	bool mIsBindCameraToPlayer = true;
+
+	//!记录所有action
+	std::queue<std::unique_ptr<GameAction>> mActions;
 
 public:
 	explicit GameScene(SDL_Renderer* renderer) :SceneBase(renderer) {}
@@ -20,8 +27,13 @@ public:
 	 */
 	void setCamera(GameMap* map, const int cameraX, const int cameraY)
 	{
-		mCameraIn = map;
-		mCameraX = cameraX;
-		mCameraY = cameraY;
+		mCamera.inMap = map;
+		mCamera.x = cameraX;
+		mCamera.y = cameraY;
+	}
+
+	template<class action, class... t> void addAction(t... data)
+	{
+		mActions.emplace(std::make_unique<action>(data...));
 	}
 };

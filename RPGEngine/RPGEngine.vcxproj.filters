@@ -31,6 +31,15 @@
     <ClInclude Include="GameScene.h">
       <Filter>Scene</Filter>
     </ClInclude>
+    <ClInclude Include="GameMapEventProcessorBase.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="GameAction.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="GameActor.h">
+      <Filter>Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Scene">
@@ -62,6 +71,9 @@
     </ClCompile>
     <ClCompile Include="GameScene.cpp">
       <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="GameAction.cpp">
+      <Filter>Game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
