@@ -40,6 +40,9 @@
     <ClInclude Include="GameActor.h">
       <Filter>Game</Filter>
     </ClInclude>
+    <ClInclude Include="RenderableActorTemplate.h">
+      <Filter>Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Scene">
@@ -73,6 +76,12 @@
       <Filter>Scene</Filter>
     </ClCompile>
     <ClCompile Include="GameAction.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderableActorTemplate.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="GameActor.cpp">
       <Filter>Game</Filter>
     </ClCompile>
   </ItemGroup>

@@ -21,7 +21,9 @@ GameMap::GameMap(SDL_Renderer* renderer, const char* mapName, std::string json, 
 			column.resize(height);
 
 		//tileË÷Òý
+		//0ºÅÎª¿Õ°×
 		std::vector<TileTemplate*> tileTemplateIndex;
+		tileTemplateIndex.emplace_back(nullptr);
 		for (auto& tileIndex : root["tile_list"])
 			tileTemplateIndex.emplace_back(&TileTemplate::getTileTemplate(tileIndex["tile_name"].asCString()));
 
@@ -43,7 +45,7 @@ GameMap::GameMap(SDL_Renderer* renderer, const char* mapName, std::string json, 
 					else
 						tileTemplate = tileTemplateIndex.at(jsonMapTileLevelData.asInt());
 
-					mMapData[x][y][level] = std::make_unique<GameTile>(*tileTemplate);
+					mMapData[x][y][level] = std::make_unique<GameTile>(tileTemplate);
 				}
 			}
 	}

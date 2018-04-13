@@ -9,6 +9,7 @@
 #include "GameMap.h"
 #include "GameScene.h"
 #include "GameActor.h"
+#include "RenderableActorTemplate.h"
 
 SDL_Renderer* renderer;
 
@@ -91,4 +92,21 @@ _declspec (dllexport) void setSpawn(const char* mapName, const int x, const int 
 	GamePlayer::getGlobalPlayer().inMap = &GameMap::getGameMap(mapName);
 	GamePlayer::getGlobalPlayer().x = x;
 	GamePlayer::getGlobalPlayer().y = y;
+}
+
+//!注册actor
+_declspec (dllexport) void registerActor(const char* actorName, const char* fileName)
+{
+	//读取完整文件
+	std::ifstream file(fileName);
+	std::stringstream fileStrStream;
+	fileStrStream << file.rdbuf();
+
+	//注册
+	RenderableActorTemplate::registerActorTemplate(renderer, actorName, fileStrStream.str());
+}
+
+_declspec (dllexport) void setPlayerAppearance(const char* actorName)
+{
+	GamePlayer::getGlobalPlayer().changeApperance(&RenderableActorTemplate::getActorTemplate(actorName));
 }

@@ -4,7 +4,10 @@
 
 void GameTile::draw(SDL_Renderer* renderer, const int xOffset, const int yOffset)
 {
-	const auto texture = mTileTemplate.tileImageList[mShownTileImageId];
+	if (!mTileTemplate)
+		return;
+
+	const auto texture = mTileTemplate->tileImageList[mShownTileImageId];
 
 	SDL_Rect renderPos;
 	renderPos.x = xOffset;

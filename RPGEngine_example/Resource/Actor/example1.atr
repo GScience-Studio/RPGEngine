@@ -1,0 +1,30 @@
+{
+    "face_front": 
+	[
+        "Resource/Actor/example1/front_0.png",
+        "Resource/Actor/example1/front_1.png",
+		"Resource/Actor/example1/front_2.png",
+		"Resource/Actor/example1/front_3.png"
+    ],
+	"face_back": 
+	[
+        "Resource/Actor/example1/back_0.png",
+        "Resource/Actor/example1/back_1.png",
+		"Resource/Actor/example1/back_2.png",
+		"Resource/Actor/example1/back_3.png"
+    ],
+	"face_left": 
+	[
+        "Resource/Actor/example1/left_0.png",
+        "Resource/Actor/example1/left_1.png",
+		"Resource/Actor/example1/left_2.png",
+		"Resource/Actor/example1/left_3.png"
+    ],
+	"face_right": 
+	[
+        "Resource/Actor/example1/right_0.png",
+        "Resource/Actor/example1/right_1.png",
+		"Resource/Actor/example1/right_2.png",
+		"Resource/Actor/example1/right_3.png"
+    ],
+}

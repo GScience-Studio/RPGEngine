@@ -4,28 +4,33 @@
 
 void GameScene::draw(SDL_Renderer* renderer, int xOffset, int yOffset)
 {
-	if (!mCamera.inMap)
+	auto& cameraLocation = mCamera.getLocation();
+
+	if (!cameraLocation.inMap)
 		return;
 
 	//把地图左上角挪到屏幕中央后再根据相机偏移计算地图渲染位置
-	mCamera.inMap->draw(renderer, 
-		static_cast<int>((-mCamera.x + XTILE_COUNT / 2.0) * TILE_SIZE), 
-		static_cast<int>((-mCamera.y + YTILE_COUNT / 2.0) * TILE_SIZE)
+	cameraLocation.inMap->draw(renderer,
+		static_cast<int>((-cameraLocation.x + CENTET_TILE_X) * TILE_SIZE),
+		static_cast<int>((-cameraLocation.y + CENTET_TILE_Y) * TILE_SIZE)
+	);
+
+	//绘制玩家
+	GamePlayer::getGlobalPlayer().draw(renderer, 
+		static_cast<int>((-cameraLocation.x + CENTET_TILE_X) * TILE_SIZE),
+		static_cast<int>((-cameraLocation.y + CENTET_TILE_Y) * TILE_SIZE)
 	);
 }
 
 void GameScene::refresh(double passedTick)
 {
-	if (mIsBindCameraToPlayer)
-	{
-		auto& player = GamePlayer::getGlobalPlayer();
-		mCamera.inMap = player.inMap;
-		mCamera.x = player.x;
-		mCamera.y = player.y;
-	}
+	//刷新地图
+	mCamera.getLocation().inMap->refresh(passedTick);
 
-	mCamera.inMap->refresh(passedTick);
+	//刷新玩家
+	GamePlayer::getGlobalPlayer().refresh(passedTick);
 
+	//处理交互事件
 	if (mActions.empty())
 	{
 		const auto keysState = SDL_GetKeyboardState(nullptr);
@@ -33,13 +38,13 @@ void GameScene::refresh(double passedTick)
 		auto& player = GamePlayer::getGlobalPlayer();
 
 		if (keysState[SDL_SCANCODE_UP])
-			addAction<ActorMoveAction>(&player, player.x, player.y - 1, 0.25);
+			addAction<ActorMoveAction>(&player, player.x, player.y - 1, 0.5);
 		else if (keysState[SDL_SCANCODE_DOWN])
-			addAction<ActorMoveAction>(&player, player.x, player.y + 1, 0.25);
+			addAction<ActorMoveAction>(&player, player.x, player.y + 1, 0.5);
 		else if (keysState[SDL_SCANCODE_LEFT])
-			addAction<ActorMoveAction>(&player, player.x - 1, player.y, 0.25);
+			addAction<ActorMoveAction>(&player, player.x - 1, player.y, 0.5);
 		else if (keysState[SDL_SCANCODE_RIGHT])
-			addAction<ActorMoveAction>(&player, player.x + 1, player.y, 0.25);
+			addAction<ActorMoveAction>(&player, player.x + 1, player.y, 0.5);
 
 	}
 	else
@@ -50,3 +55,5 @@ void GameScene::refresh(double passedTick)
 			mActions.pop();
 	}
 }
+
+GameScene::GameScene(SDL_Renderer* renderer) :SceneBase(renderer), mCamera(&GamePlayer::getGlobalPlayer()) {}
