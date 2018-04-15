@@ -1,0 +1,12 @@
+{
+    "face_front": 
+	[
+        "Resource/Actor/example2/example2.png",
+    ],
+	"face_back": 
+	[],
+	"face_left": 
+	[],
+	"face_right": 
+	[],
+}

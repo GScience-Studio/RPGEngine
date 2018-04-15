@@ -48,6 +48,17 @@ GameMap::GameMap(SDL_Renderer* renderer, const char* mapName, std::string json, 
 					mMapData[x][y][level] = std::make_unique<GameTile>(tileTemplate);
 				}
 			}
+
+		//加载所有actor
+		for (auto& actorInfo : root["actor_data"])
+		{
+			auto actor = addActor(actorInfo["name"].asCString(), actorInfo["appearance"].asCString());
+			actor->moveCrossMap(this, actorInfo["location"]["x"].asInt(), actorInfo["location"]["y"].asInt(), actorInfo["location"]["level"].asInt());
+		}
+
+		//调用初始化事件
+		if (eventProcessor)
+			eventProcessor->onInitMap(this);
 	}
 	catch (std::exception&)
 	{
@@ -57,8 +68,71 @@ GameMap::GameMap(SDL_Renderer* renderer, const char* mapName, std::string json, 
 
 void GameMap::draw(SDL_Renderer* renderer, const int xOffset, const int yOffset)
 {
-	for (auto x = 0; x != width; ++x)
-		for (auto y = 0; y != height; ++y)
-			for (auto& tile : mMapData[x][y])
-				tile->draw(renderer, xOffset + x * TILE_SIZE, yOffset + y * TILE_SIZE);
+	//逐level绘制
+	auto level = 0;
+	auto hasItem = true;
+
+	//没绘制的actor
+	std::vector<std::shared_ptr<GameActor>> unrenderedActorList;
+	for (auto& actor : actorList)
+		unrenderedActorList.push_back(actor.second);
+
+	while (hasItem)
+	{
+		hasItem = false;
+
+		//绘制地图
+		for (auto x = 0; x != width; ++x)
+			for (auto y = 0; y != height; ++y)
+			{
+				//本level是否有需要绘制的
+				if (mMapData[x][y].size() > level)
+				{
+					mMapData[x][y][level]->draw(renderer, xOffset + x * TILE_SIZE, yOffset + y * TILE_SIZE);
+
+					//那么下一level呢
+					if (mMapData[x][y].size() > level + 1)
+						hasItem = true;
+				}
+			}
+
+		//绘制actor
+		auto actor = unrenderedActorList.begin();
+		while (actor != unrenderedActorList.end())
+		{
+			//是否满足高度要求
+			if ((*actor)->level > level)
+				continue;
+
+			//是否超过高度要求
+			if ((*actor)->level + ACTOR_HEIGHT / TILE_SIZE < level)
+			{
+				actor = unrenderedActorList.erase(actor);
+				continue;
+			}
+
+			//绘制
+			(*actor)->draw(renderer, xOffset, yOffset, level - (*actor)->level);
+
+			++actor;
+		}
+
+		if (!unrenderedActorList.empty())
+			hasItem = true;
+
+		++level;
+	}
+}
+
+GameActor* GameMap::addActor(const char* name, const char* appearance)
+{
+	auto newActor = std::make_shared<GameActor>(name, appearance);
+	actorList[name] = newActor;
+	return newActor.get();
+}
+
+void GameMap::refresh(const double passedTick)
+{
+	for (auto& actor : actorList)
+		actor.second->refresh(passedTick);
 }

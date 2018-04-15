@@ -2,6 +2,7 @@
 
 #include "Renderable.h"
 #include "ActorAppearance.h"
+#include <string>
 
 class GameMap;
 
@@ -9,12 +10,13 @@ struct Location
 {
 	GameMap* inMap = nullptr;
 	double x = 0, y = 0;
+	int level = 0;
 };
 
 //!可渲染的actor
-class GameActor :public Renderable
+class GameActor :public Renderable, public std::enable_shared_from_this<GameActor>
 {
-	ActorAppearance* mRenderableActorTemplate = nullptr;
+	ActorAppearance* mActorAppearance = nullptr;
 	
 	//!角色方向
 	ActorAppearance::Direction mDirection = ActorAppearance::FaceFront;
@@ -27,13 +29,32 @@ class GameActor :public Renderable
 	//!延迟切换关键帧
 	double mWaitedTime = 0.0;
 
+	//!角色位置
+	Location mLocation;
+
+	//!角色的渲染使用不同的方式
+	void draw(SDL_Renderer*, int, int) override
+	{
+		throw(std::runtime_error("Couldn't draw an actor by this function"));
+	}
+
 public:
-	Location location;
+	double& x = mLocation.x;
+	double& y = mLocation.y;
+	int& level = mLocation.level;
 
-	GameActor() :GameActor(nullptr) {}
-	explicit GameActor(ActorAppearance* renderableActorTemplate) :mRenderableActorTemplate(renderableActorTemplate) {}
+	//!角色名称
+	const std::string actorName;
 
-	void draw(SDL_Renderer* renderer, int xOffset, int yOffset) override;
+	explicit GameActor(const char* actorName) :GameActor(actorName, nullptr) {}
+	GameActor(const char* actorName, const char* actorAppearance);
+
+	/*!角色渲染
+	 * 为了让角色拥有正确的遮盖等功能，把角色分成了多个部分渲染，
+	 * 每个部分最大为一个Tile的大小，越向上z值（用于计算遮盖）越大
+	 * part的最大值为ACTOR_HEIGHT / TILE_SIZE
+	 */
+	void draw(SDL_Renderer* renderer, int xOffset, int yOffset, int part) const;
 	void refresh(double passedTick) override;
 
 	//!播放行走动画
@@ -60,26 +81,36 @@ public:
 	//!更改actor外观
 	void changeApperance(ActorAppearance* renderableActorTemplate)
 	{
-		mRenderableActorTemplate = renderableActorTemplate;
+		mAnimationId = 0;
+		mActorAppearance = renderableActorTemplate;
 	}
 
 	//!获取外观
 	ActorAppearance* getApperance() const
 	{
-		return mRenderableActorTemplate;
+		return mActorAppearance;
 	}
+
+	//!获取所在地图
+	GameMap* getInMap() const
+	{
+		return mLocation.inMap;
+	}
+
+	//!支持移动到其他地图的移动
+	void moveCrossMap(GameMap* map, int x, int y, int level);
 };
 
 //!GamePlayer有且只有一个
 class GamePlayer :public GameActor
 {
-	GamePlayer() = default;
+	GamePlayer() :GameActor("Player") {}
 
 public:
 	static GamePlayer& getGlobalPlayer()
 	{
-		static GamePlayer player;
-		return player;
+		static std::shared_ptr<GamePlayer> player(new GamePlayer());
+		return *player;
 	}
 };
 

@@ -87,15 +87,13 @@ _declspec (dllexport) void registerMap(const char* mapName, const char* fileName
 	GameMap::registerGameMap(renderer, mapName, fileStrStream.str(), eventProcessor);
 }
 
-_declspec (dllexport) void setSpawn(const char* mapName, const int x, const int y)
+_declspec (dllexport) void setSpawn(const char* mapName, const int x, const int y, const int level)
 {
-	GamePlayer::getGlobalPlayer().location.inMap = &GameMap::getGameMap(mapName);
-	GamePlayer::getGlobalPlayer().location.x = x;
-	GamePlayer::getGlobalPlayer().location.y = y;
+	GamePlayer::getGlobalPlayer().moveCrossMap(&GameMap::getGameMap(mapName), x, y, level);
 }
 
 //!注册actor
-_declspec (dllexport) void registerActor(const char* actorName, const char* fileName)
+_declspec (dllexport) void registerActorAppearance(const char* actorName, const char* fileName)
 {
 	//读取完整文件
 	std::ifstream file(fileName);
@@ -106,7 +104,7 @@ _declspec (dllexport) void registerActor(const char* actorName, const char* file
 	ActorAppearance::registerActorAppearance(renderer, actorName, fileStrStream.str());
 }
 
-_declspec (dllexport) void setPlayerAppearance(const char* actorName)
+_declspec (dllexport) void setPlayerAppearance(const char* appearanceName)
 {
-	GamePlayer::getGlobalPlayer().changeApperance(&ActorAppearance::getActorAppearance(actorName));
+	GamePlayer::getGlobalPlayer().changeApperance(ActorAppearance::getActorAppearance(appearanceName));
 }

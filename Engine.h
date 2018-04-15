@@ -2,6 +2,7 @@
 
 #include <functional>
 #include <SDL2/SDL_main.h>
+#include "RPGEngine/GameMapEventProcessorBase.h"
 
 #define TILE_SIZE static_cast<int>(64)
 
@@ -32,10 +33,10 @@ _declspec (dllexport) void registerTile(const char* tileName, const char* fileNa
 _declspec (dllexport) void registerMap(const char* mapName, const char* fileName, GameMapEventProcessorBase* eventProcessor);
 
 //!注册actor
-_declspec (dllexport) void registerActor(const char* actorName, const char* fileName);
+_declspec (dllexport) void registerActorAppearance(const char* actorName, const char* fileName);
 
 //!设置开始游戏时的位置
-_declspec (dllexport) void setSpawn(const char* mapName, int x, int y);
+_declspec (dllexport) void setSpawn(const char* mapName, int x, int y, int level);
 
 //!设置玩家形象
-_declspec (dllexport) void setPlayerAppearance(const char* actorName);
+_declspec (dllexport) void setPlayerAppearance(const char* appearanceName);

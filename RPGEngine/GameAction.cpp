@@ -11,27 +11,27 @@ void ActorLinearMoveAction::refresh(const double passedTick)
 	{
 	case ActorAppearance::FaceFront:
 		if ((mTime -= passedTick) <= 0)
-			mActor->location.y = mTo;
+			mActor->y = mTo;
 		else
-			mActor->location.y += mSpeed * passedTick;
+			mActor->y += mSpeed * passedTick;
 		break;
 	case ActorAppearance::FaceBack:
 		if ((mTime -= passedTick) <= 0)
-			mActor->location.y = mTo;
+			mActor->y = mTo;
 		else
-			mActor->location.y -= mSpeed * passedTick;
+			mActor->y -= mSpeed * passedTick;
 		break;
 	case ActorAppearance::FaceRight:
 		if ((mTime -= passedTick) <= 0)
-			mActor->location.x = mTo;
+			mActor->x = mTo;
 		else
-			mActor->location.x += mSpeed * passedTick;
+			mActor->x += mSpeed * passedTick;
 		break;
 	case ActorAppearance::FaceLeft:
 		if ((mTime -= passedTick) <= 0)
-			mActor->location.x = mTo;
+			mActor->x = mTo;
 		else
-			mActor->location.x -= mSpeed * passedTick;
+			mActor->x -= mSpeed * passedTick;
 		break;
 	}
 
@@ -51,16 +51,16 @@ ActorLinearMoveAction::ActorLinearMoveAction(GameActor* actor, const ActorAppear
 	switch (mDirection)
 	{
 	case ActorAppearance::FaceFront:
-		mTo = mActor->location.y + distance;
+		mTo = mActor->y + distance;
 		break;
 	case ActorAppearance::FaceBack:
-		mTo = mActor->location.y - distance;
+		mTo = mActor->y - distance;
 		break;
 	case ActorAppearance::FaceRight:
-		mTo = mActor->location.x + distance;
+		mTo = mActor->x + distance;
 		break;
 	case ActorAppearance::FaceLeft:
-		mTo = mActor->location.x - distance;
+		mTo = mActor->x - distance;
 		break;
 	}
 }

@@ -34,8 +34,11 @@ public:
 		getActorAppearanceMap()[actorName] = std::make_unique<ActorAppearance>(renderer, json);
 	}
 
-	static ActorAppearance& getActorAppearance(const char* tileName)
+	static ActorAppearance* getActorAppearance(const char* tileName)
 	{
-		return *getActorAppearanceMap()[tileName];
+		if (!tileName)
+			return nullptr;
+
+		return getActorAppearanceMap()[tileName].get();
 	}
 };

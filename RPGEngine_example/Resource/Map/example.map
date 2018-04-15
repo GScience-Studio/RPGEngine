@@ -16,6 +16,20 @@
 	[
         {"tile_name":"grass"}
     ],
+	"actor_data":
+	[
+		{
+			"name":"example_actor",
+			"appearance":"example2",
+			"location":
+			{
+				"x":7,
+				"y":1,
+				"level":0
+				
+			}
+		}
+	],
     "map_data": 
 	[
         [

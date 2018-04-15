@@ -3,20 +3,40 @@
 #include "GameMap.h"
 #include <SDL2/SDL.h>
 
-void GameActor::draw(SDL_Renderer* renderer, const int xOffset, const int yOffset)
+void GameActor::draw(SDL_Renderer* renderer, const int xOffset, const int yOffset, const int part) const
 {
-	if (!mRenderableActorTemplate)
+	//如果没设置外貌则不渲染
+	if (!mActorAppearance)
 		return;
 
-	const auto texture = mRenderableActorTemplate->actorWalkingImage[mDirection][mAnimationId];
+	//获取当前外貌下的指定Id的纹理
+	const auto texture = mActorAppearance->actorWalkingImage[mDirection][mAnimationId];
 
+	//获取当前指定部分的目标坐标
 	SDL_Rect renderPos;
-	renderPos.x = static_cast<int>(xOffset + location.x * TILE_SIZE);
-	renderPos.y = static_cast<int>(yOffset + (location.y - 1) * TILE_SIZE);
-	renderPos.h = ACTOR_HEIGHT;
+	renderPos.x = static_cast<int>(xOffset + x * TILE_SIZE);
+	renderPos.y = static_cast<int>(yOffset + (y - (part + 1)) * TILE_SIZE);
+	renderPos.h = TILE_SIZE;
 	renderPos.w = ACTOR_WIDTH;
 
-	SDL_RenderCopy(renderer, texture, nullptr, &renderPos);
+	//获取源坐标
+	SDL_Rect sourcePos;
+	
+	sourcePos.x = 0;
+	sourcePos.y = ACTOR_HEIGHT - TILE_SIZE * (part + 1);
+	sourcePos.h = TILE_SIZE;
+	sourcePos.w = ACTOR_WIDTH;
+
+	//修正最顶端不到一个tile的大小的渲染
+	if (part == ACTOR_HEIGHT / TILE_SIZE)
+	{
+		//目标位置的高度为剩余的像素数量
+		renderPos.h = ACTOR_HEIGHT % TILE_SIZE;
+		//目标位置的y坐标向下移动(tile高度-新高)
+		renderPos.y += TILE_SIZE - renderPos.h;
+	}
+
+	SDL_RenderCopy(renderer, texture, &sourcePos, &renderPos);
 }
 
 void GameActor::refresh(const double passedTick)
@@ -32,15 +52,15 @@ void GameActor::refresh(const double passedTick)
 	mWaitedTime -= mAnimationSpeed;
 	++mAnimationId;
 
-	if (mAnimationId >= mRenderableActorTemplate->actorWalkingImage[mDirection].size())
+	if (mAnimationId >= mActorAppearance->actorWalkingImage[mDirection].size())
 		mAnimationId = 0;
 }
 
 void Camera::refresh()
 {
-	mLocation.inMap = mActor->location.inMap;
-	mLocation.x = mActor->location.x;
-	mLocation.y = mActor->location.y;
+	mLocation.inMap = mActor->getInMap();
+	mLocation.x = mActor->x;
+	mLocation.y = mActor->y;
 
 	//尽量多显示地图处理
 
@@ -64,3 +84,27 @@ void Camera::refresh()
 		else if ((mLocation.inMap->height - 1) - mLocation.y <= YTILE_COUNT - CENTET_TILE_Y)
 			mLocation.y = mLocation.inMap->height - (YTILE_COUNT - CENTET_TILE_Y + 1);
 }
+
+void GameActor::moveCrossMap(GameMap* map, const int x, const int y, const int level)
+{
+	//移动到地图
+	if (map != mLocation.inMap)
+	{
+		if (mLocation.inMap)
+			mLocation.inMap->actorList.erase(actorName);
+
+		mLocation.inMap = map;
+
+		if (mLocation.inMap)
+			mLocation.inMap->actorList[actorName] = shared_from_this();
+	}
+	
+	mLocation.x = x;
+	mLocation.y = y;
+	mLocation.level = level;
+}
+
+GameActor::GameActor(const char* actorName, const char* actorAppearance) :
+	mActorAppearance(ActorAppearance::getActorAppearance(actorAppearance)),
+	actorName(actorName)
+{}
