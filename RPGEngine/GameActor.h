@@ -11,30 +11,8 @@ struct Location
 	double x = 0, y = 0;
 };
 
-class GameActor
-{
-	Location mLocation;
-
-protected:
-	explicit GameActor(bool renderable = false) : renderable(renderable) {}
-
-public:
-	virtual const Location& getLocation()
-	{
-		return mLocation;
-	}
-
-	const bool renderable;
-
-	double& x = mLocation.x;
-	double& y = mLocation.y;
-	GameMap*& inMap = mLocation.inMap;
-
-	virtual ~GameActor() = default;
-};
-
 //!可渲染的actor
-class RenderableGameActor :public GameActor, public Renderable
+class GameActor :public Renderable
 {
 	RenderableActorTemplate* mRenderableActorTemplate = nullptr;
 	
@@ -50,8 +28,10 @@ class RenderableGameActor :public GameActor, public Renderable
 	double mWaitedTime = 0.0;
 
 public:
-	RenderableGameActor() :RenderableGameActor(nullptr) {}
-	explicit RenderableGameActor(RenderableActorTemplate* renderableActorTemplate) :GameActor(true), mRenderableActorTemplate(renderableActorTemplate) {}
+	Location location;
+
+	GameActor() :GameActor(nullptr) {}
+	explicit GameActor(RenderableActorTemplate* renderableActorTemplate) :mRenderableActorTemplate(renderableActorTemplate) {}
 
 	void draw(SDL_Renderer* renderer, int xOffset, int yOffset) override;
 	void refresh(double passedTick) override;
@@ -90,7 +70,8 @@ public:
 	}
 };
 
-class GamePlayer :public RenderableGameActor
+//!GamePlayer有且只有一个
+class GamePlayer :public GameActor
 {
 	GamePlayer() = default;
 
@@ -105,20 +86,21 @@ public:
 /*!相机类
  * 所有相机都需要被绑定到actor上以便于自动定位相机位置
  */
-class Camera :GameActor
+class Camera
 {
-	const GameActor* mActor;
+	const GameActor* const mActor;
+	Location mLocation;
 
 public:
-	 explicit Camera(const GameActor* bindTo) :mActor(bindTo) {}
+	explicit Camera(const GameActor* const bindTo) :mActor(bindTo) {}
 
 	//!刷新相机位置
 	void refresh();
 
 	//!获取相机所在位置
-	const Location& getLocation() override
+	const Location& getLocation()
 	{
 		refresh();
-		return GameActor::getLocation();
+		return mLocation;
 	}
 };

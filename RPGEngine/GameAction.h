@@ -11,20 +11,22 @@ public:
 	virtual ~GameAction() = default;
 };
 
-class ActorMoveAction :public GameAction
+class ActorLinearMoveAction :public GameAction
 {
 	double mTime = 0;
-
-	const double mToX;
-	const double mToY;
-
+	double mTo = 0;
+	const RenderableActorTemplate::Direction mDirection;
 	GameActor* mActor;
-
-	const double mSpeedX;
-	const double mSpeedY;
+	const double mSpeed;
 
 public:
-	ActorMoveAction(GameActor* actor, double toX, double toY, double time);
+	/*!直线移动玩家，distance为tile数
+	 * @param direction 移动的方向
+	 * @param actor 移动的Actor
+	 * @param distance 移动的距离
+	 * @param time 移动的时间 
+	 */
+	ActorLinearMoveAction(GameActor* actor, RenderableActorTemplate::Direction direction, int distance, double time);
 
 	bool isFinish() override;
 	void refresh(double passedTick) override;

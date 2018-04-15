@@ -4,7 +4,7 @@
 #include <SDL2/SDL.h>
 #include <iostream>
 
-void RenderableGameActor::draw(SDL_Renderer* renderer, int xOffset, int yOffset)
+void GameActor::draw(SDL_Renderer* renderer, const int xOffset, const int yOffset)
 {
 	if (!mRenderableActorTemplate)
 		return;
@@ -14,15 +14,15 @@ void RenderableGameActor::draw(SDL_Renderer* renderer, int xOffset, int yOffset)
 	std::cout << mAnimationId << std::endl;
 
 	SDL_Rect renderPos;
-	renderPos.x = static_cast<int>(xOffset + x * TILE_SIZE);
-	renderPos.y = static_cast<int>(yOffset + (y - 1) * TILE_SIZE);
+	renderPos.x = static_cast<int>(xOffset + location.x * TILE_SIZE);
+	renderPos.y = static_cast<int>(yOffset + (location.y - 1) * TILE_SIZE);
 	renderPos.h = ACTOR_HEIGHT;
 	renderPos.w = ACTOR_WIDTH;
 
 	SDL_RenderCopy(renderer, texture, nullptr, &renderPos);
 }
 
-void RenderableGameActor::refresh(double passedTick)
+void GameActor::refresh(const double passedTick)
 {
 	//判断是否需要处理动画
 	if (!mIsPlayingAnimation && mAnimationId == 0)
@@ -41,29 +41,29 @@ void RenderableGameActor::refresh(double passedTick)
 
 void Camera::refresh()
 {
-	inMap = mActor->inMap;
-	x = mActor->x;
-	y = mActor->y;
+	mLocation.inMap = mActor->location.inMap;
+	mLocation.x = mActor->location.x;
+	mLocation.y = mActor->location.y;
 
 	//尽量多显示地图处理
 
 	//x居中
-	if (inMap->width <= XTILE_COUNT)
-		x = (inMap->width + 1) / 2.0 - 1;
+	if (mLocation.inMap->width <= XTILE_COUNT)
+		mLocation.x = (mLocation.inMap->width + 1) / 2.0 - 1;
 	//x限制相机在可视范围内
 	else
-		if (x <= CENTET_TILE_X)
-			x = CENTET_TILE_X;
-		else if (inMap->width - x <= XTILE_COUNT - CENTET_TILE_X)
-			x = inMap->width - XTILE_COUNT + CENTET_TILE_X;
+		if (mLocation.x <= CENTET_TILE_X)
+			mLocation.x = CENTET_TILE_X;
+		else if (mLocation.inMap->width - mLocation.x <= XTILE_COUNT - CENTET_TILE_X)
+			mLocation.x = mLocation.inMap->width - XTILE_COUNT + CENTET_TILE_X;
 
 	//y居中
-	if (inMap->height <= YTILE_COUNT)
-		y = (inMap->height + 1) / 2.0 - 1;
+	if (mLocation.inMap->height <= YTILE_COUNT)
+		mLocation.y = (mLocation.inMap->height + 1) / 2.0 - 1;
 	//y限制相机在可视范围内
 	else
-		if (y <= CENTET_TILE_Y)
-			y = CENTET_TILE_Y;
-		else if ((inMap->height - 1) - y <= YTILE_COUNT - CENTET_TILE_Y)
-			y = inMap->height - (YTILE_COUNT - CENTET_TILE_Y + 1);
+		if (mLocation.y <= CENTET_TILE_Y)
+			mLocation.y = CENTET_TILE_Y;
+		else if ((mLocation.inMap->height - 1) - mLocation.y <= YTILE_COUNT - CENTET_TILE_Y)
+			mLocation.y = mLocation.inMap->height - (YTILE_COUNT - CENTET_TILE_Y + 1);
 }

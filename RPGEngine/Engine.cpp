@@ -89,9 +89,9 @@ _declspec (dllexport) void registerMap(const char* mapName, const char* fileName
 
 _declspec (dllexport) void setSpawn(const char* mapName, const int x, const int y)
 {
-	GamePlayer::getGlobalPlayer().inMap = &GameMap::getGameMap(mapName);
-	GamePlayer::getGlobalPlayer().x = x;
-	GamePlayer::getGlobalPlayer().y = y;
+	GamePlayer::getGlobalPlayer().location.inMap = &GameMap::getGameMap(mapName);
+	GamePlayer::getGlobalPlayer().location.x = x;
+	GamePlayer::getGlobalPlayer().location.y = y;
 }
 
 //!×¢²áactor

@@ -1,57 +1,67 @@
 #include "GameAction.h"
 #include <iostream>
 
-bool ActorMoveAction::isFinish()
+bool ActorLinearMoveAction::isFinish()
 {
 	return mTime <= 0;
 }
 
-void ActorMoveAction::refresh(double passedTick)
+void ActorLinearMoveAction::refresh(const double passedTick)
 {
-	if (!isFinish())
+	switch (mDirection)
 	{
-		mTime -= passedTick;
-		mActor->x += mSpeedX * passedTick;
-		mActor->y += mSpeedY * passedTick;
+	case RenderableActorTemplate::FaceFront:
+		if ((mTime -= passedTick) <= 0)
+			mActor->location.y = mTo;
+		else
+			mActor->location.y += mSpeed * passedTick;
+		break;
+	case RenderableActorTemplate::FaceBack:
+		if ((mTime -= passedTick) <= 0)
+			mActor->location.y = mTo;
+		else
+			mActor->location.y -= mSpeed * passedTick;
+		break;
+	case RenderableActorTemplate::FaceRight:
+		if ((mTime -= passedTick) <= 0)
+			mActor->location.x = mTo;
+		else
+			mActor->location.x += mSpeed * passedTick;
+		break;
+	case RenderableActorTemplate::FaceLeft:
+		if ((mTime -= passedTick) <= 0)
+			mActor->location.x = mTo;
+		else
+			mActor->location.x -= mSpeed * passedTick;
+		break;
 	}
-	if (isFinish())
-	{
-		mActor->x = mToX;
-		mActor->y = mToY;
 
-		if (mActor->renderable)
-		{
-			auto renderableActor = static_cast<RenderableGameActor*>(mActor);
-			renderableActor->stopAnimation();
-		}
-	}
+	if (isFinish())
+		mActor->stopAnimation();
 }
 
-ActorMoveAction::ActorMoveAction(GameActor* actor, const double toX, const double toY, const double time)
-	:mTime(time), mToX(static_cast<int>(toX)), mToY(static_cast<int>(toY)), mActor(actor),
-	mSpeedX((toX - actor->x) / time),
-	mSpeedY((toY - actor->y) / time)
+ActorLinearMoveAction::ActorLinearMoveAction(GameActor* actor, const RenderableActorTemplate::Direction direction, const int distance, const double time)
+	:mTime(time), mDirection(direction), mActor(actor),
+	mSpeed(distance / time)
 {
-	//是否处理动画
-	if (mActor->renderable)
+	//处理动画
+	const auto animationSpeed = time / (distance * actor->getApperance()->actorWalkingImage[RenderableActorTemplate::FaceRight].size());
+	actor->playAnimation(direction, animationSpeed);
+
+	//计算目标位置
+	switch (mDirection)
 	{
-		auto renderableActor = static_cast<RenderableGameActor*>(actor);
-		
-		double animationSpeed = 0;
-
-		if (mSpeedX != 0)
-			animationSpeed = time / (abs(toX - actor->x) * renderableActor->getApperance()->actorWalkingImage[RenderableActorTemplate::FaceRight].size());
-		else if (mSpeedY != 0)
-			animationSpeed = time / (abs(toY - actor->y) * renderableActor->getApperance()->actorWalkingImage[RenderableActorTemplate::FaceRight].size());
-		
-		if (mSpeedX > 0)
-			renderableActor->playAnimation(RenderableActorTemplate::FaceRight, animationSpeed);
-		else if (mSpeedX < 0)
-			renderableActor->playAnimation(RenderableActorTemplate::FaceLeft, animationSpeed);
-		else if (mSpeedY > 0)
-			renderableActor->playAnimation(RenderableActorTemplate::FaceFront, animationSpeed);
-		else if (mSpeedY < 0)
-			renderableActor->playAnimation(RenderableActorTemplate::FaceBack, animationSpeed);
-
+	case RenderableActorTemplate::FaceFront:
+		mTo = mActor->location.y + distance;
+		break;
+	case RenderableActorTemplate::FaceBack:
+		mTo = mActor->location.y - distance;
+		break;
+	case RenderableActorTemplate::FaceRight:
+		mTo = mActor->location.x + distance;
+		break;
+	case RenderableActorTemplate::FaceLeft:
+		mTo = mActor->location.x - distance;
+		break;
 	}
 }
