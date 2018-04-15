@@ -9,7 +9,7 @@
 #include "GameMap.h"
 #include "GameScene.h"
 #include "GameActor.h"
-#include "RenderableActorTemplate.h"
+#include "ActorAppearance.h"
 
 SDL_Renderer* renderer;
 
@@ -103,10 +103,10 @@ _declspec (dllexport) void registerActor(const char* actorName, const char* file
 	fileStrStream << file.rdbuf();
 
 	//зЂВс
-	RenderableActorTemplate::registerActorTemplate(renderer, actorName, fileStrStream.str());
+	ActorAppearance::registerActorAppearance(renderer, actorName, fileStrStream.str());
 }
 
 _declspec (dllexport) void setPlayerAppearance(const char* actorName)
 {
-	GamePlayer::getGlobalPlayer().changeApperance(&RenderableActorTemplate::getActorTemplate(actorName));
+	GamePlayer::getGlobalPlayer().changeApperance(&ActorAppearance::getActorAppearance(actorName));
 }

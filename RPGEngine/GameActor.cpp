@@ -2,7 +2,6 @@
 #include "../Engine.h"
 #include "GameMap.h"
 #include <SDL2/SDL.h>
-#include <iostream>
 
 void GameActor::draw(SDL_Renderer* renderer, const int xOffset, const int yOffset)
 {
@@ -10,8 +9,6 @@ void GameActor::draw(SDL_Renderer* renderer, const int xOffset, const int yOffse
 		return;
 
 	const auto texture = mRenderableActorTemplate->actorWalkingImage[mDirection][mAnimationId];
-
-	std::cout << mAnimationId << std::endl;
 
 	SDL_Rect renderPos;
 	renderPos.x = static_cast<int>(xOffset + location.x * TILE_SIZE);

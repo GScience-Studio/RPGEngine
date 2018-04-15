@@ -38,13 +38,13 @@ void GameScene::refresh(double passedTick)
 		auto& player = GamePlayer::getGlobalPlayer();
 
 		if (keysState[SDL_SCANCODE_UP])
-			addAction<ActorLinearMoveAction>(&player, RenderableActorTemplate::FaceBack, 1, 0.5);
+			addAction<ActorLinearMoveAction>(&player, ActorAppearance::FaceBack, 1, 0.5);
 		else if (keysState[SDL_SCANCODE_DOWN])
-			addAction<ActorLinearMoveAction>(&player, RenderableActorTemplate::FaceFront, 1, 0.5);
+			addAction<ActorLinearMoveAction>(&player, ActorAppearance::FaceFront, 1, 0.5);
 		else if (keysState[SDL_SCANCODE_LEFT])
-			addAction<ActorLinearMoveAction>(&player, RenderableActorTemplate::FaceLeft, 1, 0.5);
+			addAction<ActorLinearMoveAction>(&player, ActorAppearance::FaceLeft, 1, 0.5);
 		else if (keysState[SDL_SCANCODE_RIGHT])
-			addAction<ActorLinearMoveAction>(&player, RenderableActorTemplate::FaceRight, 1, 0.5);
+			addAction<ActorLinearMoveAction>(&player, ActorAppearance::FaceRight, 1, 0.5);
 
 	}
 	else

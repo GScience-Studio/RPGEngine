@@ -11,11 +11,12 @@ public:
 	virtual ~GameAction() = default;
 };
 
+//!直线移动玩家
 class ActorLinearMoveAction :public GameAction
 {
 	double mTime = 0;
 	double mTo = 0;
-	const RenderableActorTemplate::Direction mDirection;
+	const ActorAppearance::Direction mDirection;
 	GameActor* mActor;
 	const double mSpeed;
 
@@ -26,7 +27,7 @@ public:
 	 * @param distance 移动的距离
 	 * @param time 移动的时间 
 	 */
-	ActorLinearMoveAction(GameActor* actor, RenderableActorTemplate::Direction direction, int distance, double time);
+	ActorLinearMoveAction(GameActor* actor, ActorAppearance::Direction direction, int distance, double time);
 
 	bool isFinish() override;
 	void refresh(double passedTick) override;

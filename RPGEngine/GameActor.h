@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Renderable.h"
-#include "RenderableActorTemplate.h"
+#include "ActorAppearance.h"
 
 class GameMap;
 
@@ -14,10 +14,10 @@ struct Location
 //!可渲染的actor
 class GameActor :public Renderable
 {
-	RenderableActorTemplate* mRenderableActorTemplate = nullptr;
+	ActorAppearance* mRenderableActorTemplate = nullptr;
 	
 	//!角色方向
-	RenderableActorTemplate::Direction mDirection = RenderableActorTemplate::FaceFront;
+	ActorAppearance::Direction mDirection = ActorAppearance::FaceFront;
 	//!角色动画帧位置
 	unsigned short mAnimationId = 0;
 	//!是否播放动画
@@ -31,13 +31,13 @@ public:
 	Location location;
 
 	GameActor() :GameActor(nullptr) {}
-	explicit GameActor(RenderableActorTemplate* renderableActorTemplate) :mRenderableActorTemplate(renderableActorTemplate) {}
+	explicit GameActor(ActorAppearance* renderableActorTemplate) :mRenderableActorTemplate(renderableActorTemplate) {}
 
 	void draw(SDL_Renderer* renderer, int xOffset, int yOffset) override;
 	void refresh(double passedTick) override;
 
 	//!播放行走动画
-	void playAnimation(const RenderableActorTemplate::Direction direction, const double speed)
+	void playAnimation(const ActorAppearance::Direction direction, const double speed)
 	{
 		mDirection = direction;
 		mIsPlayingAnimation = true;
@@ -52,19 +52,19 @@ public:
 	}
 
 	//!转向
-	void turnTo(const RenderableActorTemplate::Direction direction)
+	void turnTo(const ActorAppearance::Direction direction)
 	{
 		mDirection = direction;
 	}
 
 	//!更改actor外观
-	void changeApperance(RenderableActorTemplate* renderableActorTemplate)
+	void changeApperance(ActorAppearance* renderableActorTemplate)
 	{
 		mRenderableActorTemplate = renderableActorTemplate;
 	}
 
 	//!获取外观
-	RenderableActorTemplate* getApperance() const
+	ActorAppearance* getApperance() const
 	{
 		return mRenderableActorTemplate;
 	}

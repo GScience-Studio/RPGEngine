@@ -1,5 +1,4 @@
 #include "GameAction.h"
-#include <iostream>
 
 bool ActorLinearMoveAction::isFinish()
 {
@@ -10,25 +9,25 @@ void ActorLinearMoveAction::refresh(const double passedTick)
 {
 	switch (mDirection)
 	{
-	case RenderableActorTemplate::FaceFront:
+	case ActorAppearance::FaceFront:
 		if ((mTime -= passedTick) <= 0)
 			mActor->location.y = mTo;
 		else
 			mActor->location.y += mSpeed * passedTick;
 		break;
-	case RenderableActorTemplate::FaceBack:
+	case ActorAppearance::FaceBack:
 		if ((mTime -= passedTick) <= 0)
 			mActor->location.y = mTo;
 		else
 			mActor->location.y -= mSpeed * passedTick;
 		break;
-	case RenderableActorTemplate::FaceRight:
+	case ActorAppearance::FaceRight:
 		if ((mTime -= passedTick) <= 0)
 			mActor->location.x = mTo;
 		else
 			mActor->location.x += mSpeed * passedTick;
 		break;
-	case RenderableActorTemplate::FaceLeft:
+	case ActorAppearance::FaceLeft:
 		if ((mTime -= passedTick) <= 0)
 			mActor->location.x = mTo;
 		else
@@ -40,27 +39,27 @@ void ActorLinearMoveAction::refresh(const double passedTick)
 		mActor->stopAnimation();
 }
 
-ActorLinearMoveAction::ActorLinearMoveAction(GameActor* actor, const RenderableActorTemplate::Direction direction, const int distance, const double time)
+ActorLinearMoveAction::ActorLinearMoveAction(GameActor* actor, const ActorAppearance::Direction direction, const int distance, const double time)
 	:mTime(time), mDirection(direction), mActor(actor),
 	mSpeed(distance / time)
 {
 	//处理动画
-	const auto animationSpeed = time / (distance * actor->getApperance()->actorWalkingImage[RenderableActorTemplate::FaceRight].size());
+	const auto animationSpeed = time / (distance * actor->getApperance()->actorWalkingImage[ActorAppearance::FaceRight].size());
 	actor->playAnimation(direction, animationSpeed);
 
 	//计算目标位置
 	switch (mDirection)
 	{
-	case RenderableActorTemplate::FaceFront:
+	case ActorAppearance::FaceFront:
 		mTo = mActor->location.y + distance;
 		break;
-	case RenderableActorTemplate::FaceBack:
+	case ActorAppearance::FaceBack:
 		mTo = mActor->location.y - distance;
 		break;
-	case RenderableActorTemplate::FaceRight:
+	case ActorAppearance::FaceRight:
 		mTo = mActor->location.x + distance;
 		break;
-	case RenderableActorTemplate::FaceLeft:
+	case ActorAppearance::FaceLeft:
 		mTo = mActor->location.x - distance;
 		break;
 	}

@@ -1,8 +1,8 @@
-#include "RenderableActorTemplate.h"
+#include "ActorAppearance.h"
 #include <SDL2/SDL_image.h>
 #include <json/json.h>
 
-RenderableActorTemplate::RenderableActorTemplate(SDL_Renderer* renderer, const std::string& json)
+ActorAppearance::ActorAppearance(SDL_Renderer* renderer, const std::string& json)
 {
 	try
 	{
