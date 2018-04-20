@@ -72,6 +72,8 @@ _declspec (dllexport) void registerTile(const char* tileName, const char* fileNa
 	std::stringstream fileStrStream;
 	fileStrStream << file.rdbuf();
 
+	SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Register tile from %s", fileName);
+
 	//зЂВс
 	TileTemplate::registerTileTemplate(renderer, tileName, fileStrStream.str());
 }
@@ -83,12 +85,16 @@ _declspec (dllexport) void registerMap(const char* mapName, const char* fileName
 	std::stringstream fileStrStream;
 	fileStrStream << file.rdbuf();
 
+	SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Register map from %s", fileName);
+
 	//зЂВс
 	GameMap::registerGameMap(renderer, mapName, fileStrStream.str(), eventProcessor);
 }
 
 _declspec (dllexport) void setSpawn(const char* mapName, const int x, const int y, const int level)
 {
+	SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Set player spawn point %i %i %i", x, y, level);
+
 	GamePlayer::getGlobalPlayer().moveCrossMap(&GameMap::getGameMap(mapName), x, y, level);
 }
 
@@ -100,11 +106,15 @@ _declspec (dllexport) void registerActorAppearance(const char* actorName, const 
 	std::stringstream fileStrStream;
 	fileStrStream << file.rdbuf();
 
+	SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Register actor appearance from %s with name %s", fileName, actorName);
+
 	//зЂВс
 	ActorAppearance::registerActorAppearance(renderer, actorName, fileStrStream.str());
 }
 
 _declspec (dllexport) void setPlayerAppearance(const char* appearanceName)
 {
+	SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Set player appearance to", appearanceName);
+
 	GamePlayer::getGlobalPlayer().changeApperance(ActorAppearance::getActorAppearance(appearanceName));
 }

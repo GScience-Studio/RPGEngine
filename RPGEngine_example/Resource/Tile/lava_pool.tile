@@ -1,0 +1,29 @@
+{
+	"image_list":
+	[
+		{
+			"image":"Resource/Tile/lava_pool_0.png",
+			"trigger":
+			{
+				"type":"delay",
+				"delay":0.25
+			}
+		},
+		{
+			"image":"Resource/Tile/lava_pool_1.png",
+			"trigger":
+			{
+				"type":"delay",
+				"delay":0.25
+			}
+		},
+		{
+			"image":"Resource/Tile/lava_pool_2.png",
+			"trigger":
+			{
+				"type":"delay",
+				"delay":0.25
+			}
+		}
+	]
+}

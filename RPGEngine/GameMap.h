@@ -14,7 +14,7 @@ class GameMap :public Renderable
 	}
 
 	//![X][Y][Level]
-	std::vector<std::vector<std::vector<std::unique_ptr<GameTile>>>> mMapData;
+	std::vector<std::vector<std::vector<std::shared_ptr<GameTile>>>> mMapData;
 
 	const GameMapEventProcessorBase* mEventProcessor;
 

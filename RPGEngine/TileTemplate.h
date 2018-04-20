@@ -17,7 +17,49 @@ public:
 		Null, Delay, WhenActorMoveIn, WhenActorMoveOut
 	};
 
+protected:
+	explicit TileAnimationTrigger(const TriggerType triggerType) :triggerType(triggerType) {}
+
+public:
+	//!禁止简单的复制
+	TileAnimationTrigger& operator =(const TileAnimationTrigger& trigger) = delete;
+
+	//!复制实例
+	virtual std::shared_ptr<TileAnimationTrigger> createCopy() const = 0;
+
 	const TriggerType triggerType = Null;
+	std::shared_ptr<void> triggerData = nullptr;
+
+	virtual ~TileAnimationTrigger() = default;
+};
+
+//!延迟触发器
+class TriggerDelay :public TileAnimationTrigger
+{
+public:
+	//!获取延迟的时间
+	double getDelayTime() const
+	{
+		return *std::static_pointer_cast<double>(triggerData);
+	}
+
+	//!设置延迟时间
+	void setDelayTime(const double delayTime) const
+	{
+		*std::static_pointer_cast<double>(triggerData) = delayTime;
+	}
+
+	//!延迟的时间
+	explicit TriggerDelay(const double delayTime) :TileAnimationTrigger(Delay)
+	{
+		triggerData = std::make_shared<double>(delayTime);
+	}
+
+	//!创建拷贝
+	std::shared_ptr<TileAnimationTrigger> createCopy() const override
+	{
+		return std::make_shared<TriggerDelay>(getDelayTime());
+	}
 };
 
 /*!tile模板

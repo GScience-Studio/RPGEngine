@@ -1,6 +1,7 @@
 #include "GameMap.h"
 #include "../Engine.h"
 #include <json/json.h>
+#include <SDL2/SDL.h>
 
 GameMap::GameMap(SDL_Renderer* renderer, const char* mapName, std::string json, GameMapEventProcessorBase* eventProcessor) :mEventProcessor(eventProcessor)
 {
@@ -45,7 +46,7 @@ GameMap::GameMap(SDL_Renderer* renderer, const char* mapName, std::string json, 
 					else
 						tileTemplate = tileTemplateIndex.at(jsonMapTileLevelData.asInt());
 
-					mMapData[x][y][level] = std::make_unique<GameTile>(tileTemplate);
+					mMapData[x][y][level] = std::make_shared<GameTile>(tileTemplate);
 				}
 			}
 
@@ -53,15 +54,26 @@ GameMap::GameMap(SDL_Renderer* renderer, const char* mapName, std::string json, 
 		for (auto& actorInfo : root["actor_data"])
 		{
 			auto actor = addActor(actorInfo["name"].asCString(), actorInfo["appearance"].asCString());
-			actor->moveCrossMap(this, actorInfo["location"]["x"].asInt(), actorInfo["location"]["y"].asInt(), actorInfo["location"]["level"].asInt());
+			auto level = 1;
+
+			if (actorInfo["location"]["level"].asString() == "top")
+				level = 2;
+			else if (actorInfo["location"]["level"].asString() == "ground")
+				level = 4;
+			else
+				SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, u8"Actor level should be \"top\" or \"ground\"");
+
+			actor->moveCrossMap(this, actorInfo["location"]["x"].asInt(), actorInfo["location"]["y"].asInt(), level);
 		}
 
 		//调用初始化事件
 		if (eventProcessor)
 			eventProcessor->onInitMap(this);
 	}
-	catch (std::exception&)
+	catch (std::exception& e)
 	{
+		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Failed do read map json because %s", e.what());
+
 		return;
 	}
 }
@@ -69,7 +81,7 @@ GameMap::GameMap(SDL_Renderer* renderer, const char* mapName, std::string json, 
 void GameMap::draw(SDL_Renderer* renderer, const int xOffset, const int yOffset)
 {
 	//逐level绘制
-	auto level = 0;
+	unsigned int level = 0;
 	auto hasItem = true;
 
 	//没绘制的actor
@@ -98,7 +110,7 @@ void GameMap::draw(SDL_Renderer* renderer, const int xOffset, const int yOffset)
 
 		//绘制actor
 		auto actor = unrenderedActorList.begin();
-		while (actor != unrenderedActorList.end())
+		do
 		{
 			//是否满足高度要求
 			if ((*actor)->level > level)
@@ -113,9 +125,7 @@ void GameMap::draw(SDL_Renderer* renderer, const int xOffset, const int yOffset)
 
 			//绘制
 			(*actor)->draw(renderer, xOffset, yOffset, level - (*actor)->level);
-
-			++actor;
-		}
+		} while (actor != unrenderedActorList.end() && ++actor != unrenderedActorList.end());
 
 		if (!unrenderedActorList.empty())
 			hasItem = true;
@@ -133,6 +143,13 @@ GameActor* GameMap::addActor(const char* name, const char* appearance)
 
 void GameMap::refresh(const double passedTick)
 {
+	//刷新Actor
 	for (auto& actor : actorList)
 		actor.second->refresh(passedTick);
+	
+	//刷新tile
+	for (auto tileVector1 : mMapData)
+		for (auto& tileVector2 : tileVector1)
+			for (auto& tile : tileVector2)
+				tile->refresh(passedTick);
 }

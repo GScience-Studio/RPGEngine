@@ -2,12 +2,7 @@
 	"image_list":
 	[
 		{
-			"image":"Resource/Tile/grass.png",
-			"trigger":
-			{
-				"type":"delay",
-				"delay":0
-			}
+			"image":"Resource/Tile/grass.png"
 		}
 	]
 }

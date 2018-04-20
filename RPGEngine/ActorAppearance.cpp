@@ -41,8 +41,10 @@ ActorAppearance::ActorAppearance(SDL_Renderer* renderer, const std::string& json
 		loadFacingImage("face_left", FaceLeft);
 		loadFacingImage("face_right", FaceRight);
 	}
-	catch (std::exception&)
+	catch (std::exception& e)
 	{
+		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Failed do read appearance json because %s", e.what());
+
 		return;
 	}
 }

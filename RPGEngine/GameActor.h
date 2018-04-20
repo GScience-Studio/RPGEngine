@@ -10,7 +10,7 @@ struct Location
 {
 	GameMap* inMap = nullptr;
 	double x = 0, y = 0;
-	int level = 0;
+	unsigned int level = 0;
 };
 
 //!可渲染的actor
@@ -41,7 +41,7 @@ class GameActor :public Renderable, public std::enable_shared_from_this<GameActo
 public:
 	double& x = mLocation.x;
 	double& y = mLocation.y;
-	int& level = mLocation.level;
+	unsigned int& level = mLocation.level;
 
 	//!角色名称
 	const std::string actorName;
