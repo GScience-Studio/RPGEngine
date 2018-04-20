@@ -74,7 +74,14 @@ class TileTemplate
 	}
 
 public:
+	enum TileAction
+	{
+		Air, Barrier	
+	};
+
 	TileTemplate(SDL_Renderer* renderer, const std::string& json);
+
+	TileAction tileAction;
 
 	std::vector<SDL_Texture*> tileImageList;
 	std::vector<std::unique_ptr<TileAnimationTrigger>> tileAnimationTriggerList;
@@ -84,7 +91,7 @@ public:
 		getTileTemplateMap()[tileName] = std::make_unique<TileTemplate>(renderer, json);
 	}
 
-	static TileTemplate& getTileTemplate(const char* tileName)
+	static const TileTemplate& getTileTemplate(const char* tileName)
 	{
 		return *getTileTemplateMap()[tileName];
 	}

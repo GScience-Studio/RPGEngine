@@ -1,0 +1,9 @@
+{
+	"image_list":
+	[
+		{
+			"image":"Resource/Tile/wall_0.png"
+		}
+	],
+	"action":"barrier"
+}

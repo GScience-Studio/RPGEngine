@@ -17,6 +17,11 @@ class GameTile :public Renderable
 	const TileTemplate* mTileTemplate;
 
 public:
+	const TileTemplate* getTileTemplate() const
+	{
+		return mTileTemplate;
+	}
+
 	//!从tile模板创建tile
 	explicit GameTile(const TileTemplate* tileTemplate);
 

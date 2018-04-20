@@ -18,24 +18,38 @@ TileTemplate::TileTemplate(SDL_Renderer* renderer, const std::string& json)
 		tileImageList.resize(tileImageCount);
 		tileAnimationTriggerList.resize(tileImageCount);
 
+		//有Action
+		if (!root["action"].empty())
+		{
+			if (root["action"].asString() == "air")
+				tileAction = Air;
+			else if (root["action"].asString() == "barrier")
+				tileAction = Barrier;
+			else
+				SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, u8"Acton should be \"air\" \"barrier\"");
+		}
+		else
+			tileAction = Air;
+
+		//image信息
 		for (auto i = 0; i < tileImageCount; i++)
 		{
 			auto timeImageInfo = root["image_list"][i];
 
 			//图片
 			tileImageList[i] = IMG_LoadTexture(renderer, timeImageInfo["image"].asCString());
-			
-			//没有触发器
-			if (timeImageInfo["trigger"].empty())
-				continue;
 
 			//有触发器
-			const auto triggerType = timeImageInfo["trigger"]["type"].asString();
+			if (!timeImageInfo["trigger"].empty())
+			{
 
-			if (triggerType == "delay")
-				tileAnimationTriggerList[i] = std::make_unique<TriggerDelay>(timeImageInfo["trigger"]["delay"].asDouble());
-			else
-				SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, u8"Trigger type should be \"delay\"");
+				const auto triggerType = timeImageInfo["trigger"]["type"].asString();
+
+				if (triggerType == "delay")
+					tileAnimationTriggerList[i] = std::make_unique<TriggerDelay>(timeImageInfo["trigger"]["delay"].asDouble());
+				else
+					SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, u8"Trigger type should be \"delay\"");
+			}
 		}
 	}
 	catch (std::exception& e)

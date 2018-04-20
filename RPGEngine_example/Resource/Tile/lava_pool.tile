@@ -25,5 +25,6 @@
 				"delay":0.25
 			}
 		}
-	]
+	],
+	"action":"barrier"
 }

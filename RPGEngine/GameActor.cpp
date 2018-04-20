@@ -36,6 +36,9 @@ void GameActor::draw(SDL_Renderer* renderer, const int xOffset, const int yOffse
 		renderPos.y += TILE_SIZE - renderPos.h;
 	}
 
+	//修正角色位置靠上一个tile
+	renderPos.y += ACTOR_HEIGHT / TILE_SIZE * TILE_SIZE;
+
 	SDL_RenderCopy(renderer, texture, &sourcePos, &renderPos);
 }
 

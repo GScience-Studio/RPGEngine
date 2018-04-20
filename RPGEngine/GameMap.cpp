@@ -23,7 +23,7 @@ GameMap::GameMap(SDL_Renderer* renderer, const char* mapName, std::string json, 
 
 		//tileË÷Òý
 		//0ºÅÎª¿Õ°×
-		std::vector<TileTemplate*> tileTemplateIndex;
+		std::vector<const TileTemplate*> tileTemplateIndex;
 		tileTemplateIndex.emplace_back(nullptr);
 		for (auto& tileIndex : root["tile_list"])
 			tileTemplateIndex.emplace_back(&TileTemplate::getTileTemplate(tileIndex["tile_name"].asCString()));
@@ -40,7 +40,7 @@ GameMap::GameMap(SDL_Renderer* renderer, const char* mapName, std::string json, 
 				{
 					const auto jsonMapTileLevelData = jsonMapTileData[level];
 
-					TileTemplate* tileTemplate;
+					const TileTemplate* tileTemplate;
 					if (jsonMapTileLevelData.type() == Json::stringValue)
 						tileTemplate = &TileTemplate::getTileTemplate(jsonMapTileLevelData.asCString());
 					else
@@ -57,9 +57,9 @@ GameMap::GameMap(SDL_Renderer* renderer, const char* mapName, std::string json, 
 			auto level = 1;
 
 			if (actorInfo["location"]["level"].asString() == "top")
-				level = 2;
-			else if (actorInfo["location"]["level"].asString() == "ground")
 				level = 4;
+			else if (actorInfo["location"]["level"].asString() == "ground")
+				level = 1;
 			else
 				SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, u8"Actor level should be \"top\" or \"ground\"");
 

@@ -1,5 +1,6 @@
 #include "GameScene.h"
 #include "../Engine.h"
+#include "GameTile.h"
 #include <SDL2/SDL.h>
 
 void GameScene::draw(SDL_Renderer* renderer, int xOffset, int yOffset)
@@ -16,7 +17,7 @@ void GameScene::draw(SDL_Renderer* renderer, int xOffset, int yOffset)
 	);
 }
 
-void GameScene::refresh(double passedTick)
+void GameScene::refresh(const double passedTick)
 {
 	//Ë¢ÐÂµØÍ¼
 	mCamera.getLocation().inMap->refresh(passedTick);
@@ -28,14 +29,54 @@ void GameScene::refresh(double passedTick)
 
 		auto& player = GamePlayer::getGlobalPlayer();
 
+		const auto canMoveTo = [&](GameMap* gameMap, int x, int y)
+		{
+			//³¬Ô½µØÍ¼
+			if (x < 0 || y < 0 || x >= gameMap->width || y >= gameMap->height - 1)
+				return false;
+
+			//µØÍ¼ÆÁÕÏ
+			auto tiles = player.getInMap()->getTiles(x, y);
+			for (auto& tile : tiles)
+			{
+				if (tile->getTileTemplate() && tile->getTileTemplate()->tileAction == TileTemplate::Barrier)
+					return false;
+			}
+
+			//½ÇÉ«ÕÚµ²
+			for (auto& actor : player.getInMap()->getActors())
+				if (actor->x == x && actor->y == y)
+					return false;
+
+			return true;
+		};
+
+		ActorAppearance::Direction direction;
+		auto canMoveToTile = false;
+
 		if (keysState[SDL_SCANCODE_UP])
-			addAction<ActorLinearMoveAction>(&player, ActorAppearance::FaceBack, 1, 0.5);
+		{
+			canMoveToTile = canMoveTo(player.getInMap(), player.x, player.y - 1);
+			direction = ActorAppearance::FaceBack;
+		}
 		else if (keysState[SDL_SCANCODE_DOWN])
-			addAction<ActorLinearMoveAction>(&player, ActorAppearance::FaceFront, 1, 0.5);
+		{
+			canMoveToTile = canMoveTo(player.getInMap(), player.x, player.y + 1);
+			direction = ActorAppearance::FaceFront;
+		}
 		else if (keysState[SDL_SCANCODE_LEFT])
-			addAction<ActorLinearMoveAction>(&player, ActorAppearance::FaceLeft, 1, 0.5);
+		{
+			canMoveToTile = canMoveTo(player.getInMap(), player.x - 1, player.y);
+			direction = ActorAppearance::FaceLeft;
+		}
 		else if (keysState[SDL_SCANCODE_RIGHT])
-			addAction<ActorLinearMoveAction>(&player, ActorAppearance::FaceRight, 1, 0.5);
+		{
+			canMoveToTile = canMoveTo(player.getInMap(), player.x + 1, player.y);
+			direction = ActorAppearance::FaceRight;
+		}
+
+		if (canMoveToTile)
+			addAction<ActorLinearMoveAction>(&player, direction, 1, 0.5);
 
 	}
 	else

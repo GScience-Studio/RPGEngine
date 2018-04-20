@@ -4,5 +4,6 @@
 		{
 			"image":"Resource/Tile/grass.png"
 		}
-	]
+	],
+	"action":"air"
 }
